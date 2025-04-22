@@ -1,5 +1,9 @@
 from fastapi import FastAPI
 from app.routers import (books)
+from app.database import init_database
+
+#Инициализируем базу данных
+init_database()
 
 app = FastAPI(
     title="Система управления каталогом книг",
@@ -18,4 +22,3 @@ app = FastAPI(
 )
 
 app.include_router(books.routers)
-

@@ -7,7 +7,6 @@ routers = APIRouter(prefix="/books", tags=["Книги"])
 books = []
 current_id = 1
 
-
 @routers.post("/books", status_code=status.HTTP_201_CREATED)
 def add_book(book_data: BookCreate):
     global current_id
