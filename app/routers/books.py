@@ -1,11 +1,13 @@
-from fastapi import HTTPException, status, APIRouter
-
-from app.schemas.books import BookCreate, Book
+from fastapi import HTTPException, status, APIRouter, Depends
+from sqlalchemy.orm import Session
+from sqlalchemy import Column, Integer, String
+from app.database import get_db, Books
+from app.schemas.books import BookCreate
 
 routers = APIRouter(prefix="/books", tags=["Книги"])
 
-books = []
-current_id = 1
+# books = []
+# current_id = 1
 
 @routers.post("/books", status_code=status.HTTP_201_CREATED)
 def add_book(book_data: BookCreate):
@@ -19,8 +21,23 @@ def add_book(book_data: BookCreate):
     }
 
 @routers.get("/books", response_model=dict)
-def get_books():
-    return {"books": books}
+def get_books(db: Session = Depends(get_db)):
+    """
+    Get all books from the database (synchronous version)
+    """
+    books = db.query(Books).all()
+
+    return {
+        "books": [
+            {
+                "id": book.book_id,
+                "title": book.book_title,
+                "author": book.book_author,
+                "publication_year": book.book_year
+            }
+            for book in books
+        ]
+    }
 
 @routers.get("/books/{book_id}")
 def get_book(book_id: int):

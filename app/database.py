@@ -12,10 +12,17 @@ Base = declarative_base()
 
 class Books(Base):
     __tablename__ = "books"
-    book_id = Column(Integer, primary_key=True, index=True)
+    book_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     book_title = Column(String, index=True)
     book_author = Column(String, index=True)
     book_year = Column(Integer, index=True)
 
 def init_database():
      Base.metadata.create_all(engine)
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

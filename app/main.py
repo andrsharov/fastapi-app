@@ -4,7 +4,7 @@ from app.database import init_database
 
 #Инициализируем базу данных
 init_database()
-
+#Создаю объект приложения
 app = FastAPI(
     title="Система управления каталогом книг",
     description="Простейшая система каталогом книг, основанная на "
