@@ -52,15 +52,26 @@ def get_books(db: Session = Depends(get_db)):
         ]
     }
 
-@routers.get("/books/{book_id}")
-def get_book(book_id: int):
-    for book in books:
-        if book.id == book_id:
-            return book
-    raise HTTPException(
-        status_code=status.HTTP_404_NOT_FOUND,
-        detail=f"Книга с id {book_id} не найдена"
-    )
+@routers.get("/books/{book_id}", response_model=dict)
+def get_book(book_id: int, db: Session = Depends(get_db)):
+    """
+    Получить книгу по ID из базы данных
+    """
+    # Ищем книгу в базе данных
+    book = db.query(Books).filter(Books.book_id == book_id).first()
+
+    if not book:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Книга с id {book_id} не найдена"
+        )
+
+    return {
+        "id": book.book_id,
+        "title": book.book_title,
+        "author": book.book_author,
+        "publication_year": book.book_year
+    }
 
 @routers.put("/books/{book_id}")
 async def update_book(book_id: int, book_data: BookCreate):
