@@ -22,7 +22,7 @@ class Users(Base):
     user_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     user_name = Column(String, unique=True, index=True)
     user_full_name = Column(String)
-    user_jwt_access_token = Column(String)
+    user_bearer_access_token = Column(String)
 
 def init_database():
      Base.metadata.create_all(engine)

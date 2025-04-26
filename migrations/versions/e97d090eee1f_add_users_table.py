@@ -36,7 +36,7 @@ def upgrade() -> None:
     sa.Column('user_id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('user_name', sa.String(), nullable=True),
     sa.Column('user_full_name', sa.String(), nullable=True),
-    sa.Column('user_jwt_access_token', sa.String(), nullable=True),
+    sa.Column('user_bearer_access_token', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('user_id')
     )
     op.create_index(op.f('ix_users_user_id'), 'users', ['user_id'], unique=False)
