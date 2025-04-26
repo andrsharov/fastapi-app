@@ -1,12 +1,12 @@
 from fastapi import HTTPException, status, APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.database import get_db, Books
-from app.schemas.books import BookCreate
+from app.schemas.books import BookSchema
 
 routers = APIRouter(prefix="/books", tags=["Книги"])
 
 @routers.post("/books", status_code=status.HTTP_201_CREATED)
-def add_book(book_data: BookCreate, db: Session = Depends(get_db)):
+def add_book(book_data: BookSchema, db: Session = Depends(get_db)):
     """
     Добавить новую книгу в базу данных
     """
@@ -75,7 +75,7 @@ def get_book(book_id: int, db: Session = Depends(get_db)):
 @routers.put("/books/{book_id}", response_model=dict)
 def update_book(
         book_id: int,
-        book_data: BookCreate,
+        book_data: BookSchema,
         db: Session = Depends(get_db)
 ):
     """

@@ -5,11 +5,6 @@ class BookSchema(BaseModel):
     book_author: str
     book_year: int
 
-class BookCreate(BaseModel):
-    book_title: str
-    book_author: str
-    book_year: int
-
     class Config:
         schema_extra = {
             "example": {
@@ -18,6 +13,3 @@ class BookCreate(BaseModel):
                 "book_year": 2023
             }
         }
-
-class Book(BookCreate):
-    id: int
