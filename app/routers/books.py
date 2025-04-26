@@ -1,12 +1,32 @@
-from fastapi import HTTPException, status, APIRouter, Depends
+from fastapi import HTTPException, status, APIRouter, Depends, Security
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
-from app.database import get_db, Books
+from app.database import get_db, Books, Users
 from app.schemas.books import BookSchema
 
 routers = APIRouter(prefix="/books", tags=["Книги"])
+security = HTTPBearer()
+
+def get_current_user(
+    credentials: HTTPAuthorizationCredentials = Security(security),
+    db: Session = Depends(get_db)
+):
+    token = credentials.credentials
+    user = db.query(Users).filter(Users.user_bearer_access_token == token).first()
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Неверный Bearer токен авторизации",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    return user
 
 @routers.post("/books", status_code=status.HTTP_201_CREATED)
-def add_book(book_data: BookSchema, db: Session = Depends(get_db)):
+def add_book(
+        book_data: BookSchema,
+        db: Session = Depends(get_db),
+        current_user: Users = Depends(get_current_user)
+):
     """
     Добавить новую книгу в базу данных
     """
@@ -33,7 +53,10 @@ def add_book(book_data: BookSchema, db: Session = Depends(get_db)):
     }
 
 @routers.get("/books", response_model=dict)
-def get_books(db: Session = Depends(get_db)):
+def get_books(
+        db: Session = Depends(get_db),
+        current_user: Users = Depends(get_current_user)
+):
     """
     Получаем список всех книг из базы данных
     """
@@ -52,7 +75,11 @@ def get_books(db: Session = Depends(get_db)):
     }
 
 @routers.get("/books/{book_id}", response_model=dict)
-def get_book(book_id: int, db: Session = Depends(get_db)):
+def get_book(
+        book_id: int,
+        db: Session = Depends(get_db),
+        current_user: Users = Depends(get_current_user)
+):
     """
     Получить книгу по ID из базы данных
     """
@@ -76,7 +103,8 @@ def get_book(book_id: int, db: Session = Depends(get_db)):
 def update_book(
         book_id: int,
         book_data: BookSchema,
-        db: Session = Depends(get_db)
+        db: Session = Depends(get_db),
+        current_user: Users = Depends(get_current_user)
 ):
     """
     Обновить данные книги по ID
@@ -113,7 +141,8 @@ def update_book(
 @routers.delete("/books/{book_id}", response_model=dict)
 def delete_book(
         book_id: int,
-        db: Session = Depends(get_db)
+        db: Session = Depends(get_db),
+        current_user: Users = Depends(get_current_user)
 ):
     """
     Удалить книгу по ID из базы данных
