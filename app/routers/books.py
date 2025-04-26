@@ -6,24 +6,37 @@ from app.schemas.books import BookCreate
 
 routers = APIRouter(prefix="/books", tags=["Книги"])
 
-# books = []
-# current_id = 1
-
 @routers.post("/books", status_code=status.HTTP_201_CREATED)
-def add_book(book_data: BookCreate):
-    global current_id
-    new_book = Book(**book_data.dict(), id=current_id)
-    books.append(new_book)
-    current_id += 1
+def add_book(book_data: BookCreate, db: Session = Depends(get_db)):
+    """
+    Добавить новую книгу в базу данных
+    """
+    # Создаем объект модели SQLAlchemy
+    new_book = Books(
+        book_title=book_data.book_title,
+        book_author=book_data.book_author,
+        book_year=book_data.book_year
+    )
+
+    # Добавляем в сессию и сохраняем
+    db.add(new_book)
+    db.commit()
+    db.refresh(new_book)  # Обновляем объект для получения сгенерированного ID
+
     return {
         "message": "Книга успешно добавлена",
-        "book": new_book
+        "book": {
+            "id": new_book.book_id,
+            "title": new_book.book_title,
+            "author": new_book.book_author,
+            "publication_year": new_book.book_year
+        }
     }
 
 @routers.get("/books", response_model=dict)
 def get_books(db: Session = Depends(get_db)):
     """
-    Get all books from the database (synchronous version)
+    Получаем список всех книг из базы данных
     """
     books = db.query(Books).all()
 
