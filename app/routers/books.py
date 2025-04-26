@@ -108,3 +108,35 @@ def update_book(
             "publication_year": db_book.book_year
         }
     }
+
+
+@routers.delete("/books/{book_id}", response_model=dict)
+def delete_book(
+        book_id: int,
+        db: Session = Depends(get_db)
+):
+    """
+    Удалить книгу по ID из базы данных
+    """
+    # Находим книгу в базе данных
+    db_book = db.query(Books).filter(Books.book_id == book_id).first()
+
+    if not db_book:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Книга с id {book_id} не найдена"
+        )
+
+    # Удаляем книгу
+    db.delete(db_book)
+    db.commit()
+
+    return {
+        "message": f"Книга с id {book_id} успешно удалена",
+        "deleted_book": {
+            "id": db_book.book_id,
+            "title": db_book.book_title,
+            "author": db_book.book_author,
+            "publication_year": db_book.book_year
+        }
+    }
