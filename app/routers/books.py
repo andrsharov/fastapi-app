@@ -1,6 +1,5 @@
 from fastapi import HTTPException, status, APIRouter, Depends
 from sqlalchemy.orm import Session
-from sqlalchemy import Column, Integer, String
 from app.database import get_db, Books
 from app.schemas.books import BookCreate
 
@@ -73,17 +72,39 @@ def get_book(book_id: int, db: Session = Depends(get_db)):
         "publication_year": book.book_year
     }
 
-@routers.put("/books/{book_id}")
-async def update_book(book_id: int, book_data: BookCreate):
-    for i, book in enumerate(books):
-        if book.id == book_id:
-            updated_book = Book(**book_data.dict(), id=book_id)
-            books[i] = updated_book
-            return {
-                "message": "Книга успешно обновлена",
-                "book": updated_book
-            }
-    raise HTTPException(
-        status_code=status.HTTP_404_NOT_FOUND,
-        detail=f"Книга с id {book_id} не найдена"
-    )
+@routers.put("/books/{book_id}", response_model=dict)
+def update_book(
+        book_id: int,
+        book_data: BookCreate,
+        db: Session = Depends(get_db)
+):
+    """
+    Обновить данные книги по ID
+    """
+    # Находим книгу в базе данных
+    db_book = db.query(Books).filter(Books.book_id == book_id).first()
+
+    if not db_book:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Книга с id {book_id} не найдена"
+        )
+
+    # Обновляем поля
+    db_book.book_title = book_data.book_title
+    db_book.book_author = book_data.book_author
+    db_book.book_year = book_data.book_year
+
+    # Сохраняем изменения
+    db.commit()
+    db.refresh(db_book)
+
+    return {
+        "message": "Книга успешно обновлена",
+        "book": {
+            "id": db_book.book_id,
+            "title": db_book.book_title,
+            "author": db_book.book_author,
+            "publication_year": db_book.book_year
+        }
+    }
