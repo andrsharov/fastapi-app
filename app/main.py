@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routers import (books)
+from app.routers import (books, users)
 from app.database import init_database
 
 #Инициализируем базу данных
@@ -22,3 +22,4 @@ app = FastAPI(
 )
 
 app.include_router(books.routers)
+app.include_router(users.routers)
