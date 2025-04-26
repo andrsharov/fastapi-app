@@ -17,6 +17,13 @@ class Books(Base):
     book_author = Column(String, index=True)
     book_year = Column(Integer, index=True)
 
+class Users(Base):
+    __tablename__ = "users"
+    user_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    user_name = Column(String, unique=True, index=True)
+    user_full_name = Column(String)
+    user_jwt_access_token = Column(String)
+
 def init_database():
      Base.metadata.create_all(engine)
 
