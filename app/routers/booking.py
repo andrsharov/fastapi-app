@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from datetime import datetime, timezone
 from app.database import get_db, Booking, Books, Users
-from app.schemas.booking import BookingCreate
+from app.schemas.booking import BookingCreate, BookingFinish
 from app.auth.auth_handler import get_current_user
 
 routers = APIRouter(prefix="/booking", tags=["Бронирование"])
@@ -47,3 +47,35 @@ def issue_book(
     db.refresh(new_booking)
 
     return new_booking
+
+@routers.put("/return/{booking_id}", response_model=BookingFinish)
+def return_book(
+        booking_id: int,
+        db: Session = Depends(get_db),
+        current_user: Users = Depends(get_current_user)
+):
+    booking = db.query(Booking).filter(
+        Booking.id == booking_id,
+        Booking.user_id == current_user.user_id
+    ).first()
+
+    if not booking:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Запись о бронировании не найдена"
+        )
+
+    if booking.status == 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Книга уже была возвращена ранее"
+        )
+
+    # Обновление данных
+    booking.date_end = datetime.now(timezone.utc)
+    booking.status = 0
+
+    db.commit()
+    db.refresh(booking)
+
+    return booking
