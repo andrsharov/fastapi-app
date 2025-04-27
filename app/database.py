@@ -1,6 +1,7 @@
 from datetime import datetime
-from sqlalchemy import  create_engine, Column, String, Integer, Engine
+from sqlalchemy import  create_engine, Column, String, Integer, Engine, ForeignKey, DateTime
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.sql import func
 from sqlmodel import SQLModel
 from sqlalchemy.orm import sessionmaker, DeclarativeBase, Mapped, mapped_column
 
@@ -23,6 +24,14 @@ class Users(Base):
     user_name = Column(String, unique=True, index=True)
     user_full_name = Column(String)
     user_bearer_access_token = Column(String)
+
+class Booking(Base):
+    __tablename__ = "booking"
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    book_id = Column(Integer, ForeignKey("books.book_id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.user_id"), nullable=False)
+    date_start = Column(DateTime(timezone=True), server_default=func.now())
+    date_end = Column(DateTime(timezone=True), nullable=True)
 
 def init_database():
      Base.metadata.create_all(engine)
