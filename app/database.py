@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import  create_engine, Column, String, Integer, Engine, ForeignKey, DateTime
+from sqlalchemy import create_engine, Column, String, Integer, Engine, ForeignKey, DateTime, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql import func
 from sqlmodel import SQLModel
@@ -30,8 +30,9 @@ class Booking(Base):
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     book_id = Column(Integer, ForeignKey("books.book_id"), nullable=False)
     user_id = Column(Integer, ForeignKey("users.user_id"), nullable=False)
-    date_start = Column(DateTime(timezone=True), server_default=func.now())
+    date_start = Column(DateTime(timezone=True), nullable=True)
     date_end = Column(DateTime(timezone=True), nullable=True)
+    status = Column(Integer, nullable=False)
 
 def init_database():
      Base.metadata.create_all(engine)
