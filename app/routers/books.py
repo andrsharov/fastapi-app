@@ -1,25 +1,10 @@
 from fastapi import HTTPException, status, APIRouter, Depends, Security
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
 from app.database import get_db, Books, Users
 from app.schemas.books import BookSchema
+from app.auth.auth_handler import get_current_user
 
 routers = APIRouter(prefix="/books", tags=["Книги"])
-security = HTTPBearer()
-
-def get_current_user(
-    credentials: HTTPAuthorizationCredentials = Security(security),
-    db: Session = Depends(get_db)
-):
-    token = credentials.credentials
-    user = db.query(Users).filter(Users.user_bearer_access_token == token).first()
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Неверный Bearer токен авторизации",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    return user
 
 @routers.post("/books", status_code=status.HTTP_201_CREATED)
 def add_book(
