@@ -18,3 +18,24 @@ class BookingCreate(BookingSchema):
 
 class BookingFinish(BookingSchema):
     pass
+
+class BookingGetResponse(BookingSchema):
+    id: int
+    book_id: int
+    user_id: int
+    date_start: datetime | None
+    date_end: datetime | None
+    status: int
+
+    class Config:
+        orm_mode = True
+        schema_extra = {
+            "example": {
+                "id": 1,
+                "book_id": 5,
+                "user_id": 3,
+                "date_start": "2023-10-05T12:00:00",
+                "date_end": None,
+                "status": 1
+            }
+        }

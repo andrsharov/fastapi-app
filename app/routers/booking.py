@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from datetime import datetime, timezone
 from app.database import get_db, Booking, Books, Users
-from app.schemas.booking import BookingCreate, BookingFinish
+from app.schemas.booking import BookingCreate, BookingFinish, BookingGetResponse
 from app.auth.auth_handler import get_current_user
 
 routers = APIRouter(prefix="/booking", tags=["Бронирование"])
@@ -77,5 +77,29 @@ def return_book(
 
     db.commit()
     db.refresh(booking)
+
+    return booking
+
+
+@routers.get("/get/{booking_id}", response_model=BookingGetResponse)
+def get_booking(
+        booking_id: int,
+        db: Session = Depends(get_db),
+        current_user: Users = Depends(get_current_user)
+):
+    """
+    Получить данные бронирования по ID
+    """
+    # Ищем бронирование
+    booking = db.query(Booking).filter(
+        Booking.id == booking_id,
+        Booking.user_id == current_user.user_id
+    ).first()
+
+    if not booking:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Бронирование не найдено"
+        )
 
     return booking
