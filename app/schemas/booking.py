@@ -6,7 +6,7 @@ class BookingSchema(BaseModel):
     user_id: int
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "book_id": "ID Книги",
                 "user_id": "ID Пользователя"
@@ -29,7 +29,7 @@ class BookingGetResponse(BookingSchema):
 
     class Config:
         orm_mode = True
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "id": 1,
                 "book_id": 5,

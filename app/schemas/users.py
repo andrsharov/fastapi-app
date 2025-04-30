@@ -6,7 +6,7 @@ class UserSchema(BaseModel):
     user_bearer_access_token: str
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "user_name": "Имя пользователя (Логин)",
                 "user_full_name": "Полное имя пользователя (ФИО)",
