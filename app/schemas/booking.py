@@ -39,3 +39,15 @@ class BookingGetResponse(BookingSchema):
                 "status": 1
             }
         }
+
+class BookingDeleteResponse(BaseModel):
+    message: str
+    deleted_id: int
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "message": "Бронирование успешно удалено",
+                "deleted_id": 1
+            }
+        }

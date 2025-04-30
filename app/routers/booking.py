@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session, joinedload
 from datetime import datetime, timezone
 from app.database import get_db, Booking, Books, Users
-from app.schemas.booking import BookingCreate, BookingFinish, BookingGetResponse
+from app.schemas.booking import BookingCreate, BookingFinish, BookingGetResponse, BookingDeleteResponse
 from app.auth.auth_handler import get_current_user
 
 routers = APIRouter(prefix="/booking", tags=["Бронирование"])
@@ -103,3 +103,33 @@ def get_booking(
         )
 
     return booking
+
+@routers.delete("/delete/{booking_id}", response_model=BookingDeleteResponse)
+def delete_booking(
+    booking_id: int,
+    db: Session = Depends(get_db),
+    current_user: Users = Depends(get_current_user)
+):
+    """
+    Удалить запись бронирования по ID
+    """
+    # Ищем бронирование
+    booking = db.query(Booking).filter(
+        Booking.id == booking_id,
+        Booking.user_id == current_user.user_id
+    ).first()
+
+    if not booking:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Бронирование не найдено"
+        )
+
+    # Удаляем запись
+    db.delete(booking)
+    db.commit()
+
+    return {
+        "message": "Бронирование успешно удалено",
+        "deleted_id": booking_id
+    }
