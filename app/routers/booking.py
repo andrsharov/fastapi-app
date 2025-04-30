@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session, joinedload
+from sqlalchemy.orm import Session
 from datetime import datetime, timezone
 from app.database import get_db, Booking, Books, Users
 from app.schemas.booking import BookingCreate, BookingFinish, BookingGetResponse, BookingDeleteResponse

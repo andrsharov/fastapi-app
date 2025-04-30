@@ -1,9 +1,6 @@
-from datetime import datetime
-from sqlalchemy import create_engine, Column, String, Integer, Engine, ForeignKey, DateTime, Boolean
+from sqlalchemy import create_engine, Column, String, Integer, ForeignKey, DateTime
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.sql import func
-from sqlmodel import SQLModel
-from sqlalchemy.orm import sessionmaker, DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.orm import sessionmaker
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///db.sqlite3"
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
