@@ -1,3 +1,4 @@
+"""Database settings"""
 from sqlalchemy import create_engine, Column, String, Integer, ForeignKey, DateTime
 from sqlalchemy.orm import sessionmaker, declarative_base
 
@@ -8,6 +9,7 @@ SessionLocal = sessionmaker(engine, expire_on_commit=False)
 Base = declarative_base()
 
 class Books(Base):
+    """Table books"""
     __tablename__ = "books"
     book_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     book_title = Column(String, index=True)
@@ -15,6 +17,7 @@ class Books(Base):
     book_year = Column(Integer, index=True)
 
 class Users(Base):
+    """Table users"""
     __tablename__ = "users"
     user_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     user_name = Column(String, unique=True, index=True)
@@ -22,6 +25,7 @@ class Users(Base):
     user_bearer_access_token = Column(String)
 
 class Booking(Base):
+    """Table booking"""
     __tablename__ = "booking"
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     book_id = Column(Integer, ForeignKey("books.book_id"), nullable=False)
@@ -31,9 +35,11 @@ class Booking(Base):
     status = Column(Integer, nullable=False)
 
 def init_database():
-     Base.metadata.create_all(engine)
+    """Init database if not exists"""
+    Base.metadata.create_all(engine)
 
 def get_db():
+    """Connect to database"""
     db = SessionLocal()
     try:
         yield db
