@@ -1,3 +1,4 @@
+"""Модуль аутентификации пользователя"""
 from fastapi import HTTPException, Security, Depends, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
@@ -9,6 +10,9 @@ def get_current_user(
     credentials: HTTPAuthorizationCredentials = Security(security),
     db: Session = Depends(get_db)
 ):
+    """
+    Функция проверяющая Bearer токен авторизации(сравнивает с базой данных)
+    """
     token = credentials.credentials
     user = db.query(Users).filter(Users.user_bearer_access_token == token).first()
     if not user:
