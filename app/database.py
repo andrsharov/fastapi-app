@@ -8,7 +8,7 @@ SessionLocal = sessionmaker(engine, expire_on_commit=False)
 
 Base = declarative_base()
 
-class Books(Base):
+class Books(Base):  # pylint: disable=too-few-public-methods
     """Table books"""
     __tablename__ = "books"
     book_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
@@ -16,7 +16,7 @@ class Books(Base):
     book_author = Column(String, index=True)
     book_year = Column(Integer, index=True)
 
-class Users(Base):
+class Users(Base):  # pylint: disable=too-few-public-methods
     """Table users"""
     __tablename__ = "users"
     user_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
@@ -24,7 +24,7 @@ class Users(Base):
     user_full_name = Column(String)
     user_bearer_access_token = Column(String)
 
-class Booking(Base):
+class Booking(Base):  # pylint: disable=too-few-public-methods
     """Table booking"""
     __tablename__ = "booking"
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
