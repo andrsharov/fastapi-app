@@ -1,3 +1,4 @@
+"""Простой сервер для управления каталогом книг."""
 from fastapi import FastAPI
 from app.routers import (books, users, booking)
 from app.database import init_database
