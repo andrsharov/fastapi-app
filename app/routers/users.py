@@ -24,7 +24,7 @@ def add_user(user_data: UserSchema, db: Session = Depends(get_db)):
 
     return {
         "message": "Пользователь успешно добавлен",
-        "book": {
+        "users": {
             "user_id": new_user.user_id,
             "user_name": new_user.user_name,
             "user_full_name": new_user.user_full_name,
