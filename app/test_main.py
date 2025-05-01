@@ -1,7 +1,8 @@
+"""Tests for project"""
+from datetime import datetime
 from fastapi.testclient import TestClient
-from .main import app
-from datetime import datetime, timedelta
 import pytest
+from .main import app
 
 client = TestClient(app)
 
@@ -9,7 +10,7 @@ client = TestClient(app)
 # Фикстуры для тестовых данных
 @pytest.fixture
 def test_user():
-    # Генерируем уникальное имя пользователя для каждого теста
+    """Генерируем уникальное имя пользователя для каждого теста"""
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S%f")
     return {
         "user_name": f"testuser_{timestamp}",
@@ -20,6 +21,7 @@ def test_user():
 
 @pytest.fixture
 def test_book():
+    """Тестовые данные для метода /books"""
     return {
         "book_title": "Test Book",
         "book_author": "Test Author",
@@ -29,12 +31,14 @@ def test_book():
 
 # Тестовые сценарии
 def test_create_user(test_user):
+    """Тест создания пользователя /users"""
     response = client.post("/users", json=test_user)
     assert response.status_code == 201
     assert response.json()["message"] == "Пользователь успешно добавлен"
 
 
 def test_create_book(test_user, test_book):
+    """Тест создания книги /books"""
     # 1. Создаем уникального пользователя
     user_response = client.post("/users", json=test_user)
     assert user_response.status_code == 201
@@ -49,6 +53,12 @@ def test_create_book(test_user, test_book):
 
 
 def test_book_flow(test_user, test_book):
+    """
+    Полный тест:
+    1. Создаем пользователя
+    2. Создаем книгу
+    3. Создаем бронь
+    """
     # 1. Создаем пользователя
     user_response = client.post("/users", json=test_user)
     assert user_response.status_code == 201, "Ошибка при создании пользователя"
@@ -79,11 +89,13 @@ def test_book_flow(test_user, test_book):
     assert "id" in booking_data, "Ответ не содержит ID бронирования"
 
 def test_unauthorized_access():
+    """Тест неавторизованного доступа к книгам /books"""
     response = client.get("/books")
     assert response.status_code == 403
     assert "Not authenticated" in response.json()["detail"]
 
 def test_book_not_found(test_user):
+    """Тест запроса несуществующей книги(несуществующего ID книги"""
     # 1. Создаем уникального пользователя
     user_response = client.post("/users", json=test_user)
     assert user_response.status_code == 201
