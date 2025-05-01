@@ -8,7 +8,7 @@ from app.auth.auth_handler import get_current_user
 routers = APIRouter(prefix="/booking", tags=["Бронирование"])
 
 
-@routers.post("/issue", status_code=status.HTTP_201_CREATED, response_model=BookingCreate)
+@routers.post("/issue", status_code=status.HTTP_201_CREATED, response_model=BookingGetResponse)
 def issue_book(
         booking_data: BookingCreate,
         db: Session = Depends(get_db),
