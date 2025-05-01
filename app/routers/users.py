@@ -5,7 +5,7 @@ from app.schemas.users import UserSchema
 
 routers = APIRouter(prefix="/users", tags=["Пользователи"])
 
-@routers.post("/users", status_code=status.HTTP_201_CREATED)
+@routers.post("/", status_code=status.HTTP_201_CREATED, response_model=dict)
 def add_user(user_data: UserSchema, db: Session = Depends(get_db)):
     """
     Добавить нового пользователя в базу данных
