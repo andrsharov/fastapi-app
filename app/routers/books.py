@@ -6,7 +6,7 @@ from app.auth.auth_handler import get_current_user
 
 routers = APIRouter(prefix="/books", tags=["Книги"])
 
-@routers.post("/books", status_code=status.HTTP_201_CREATED)
+@routers.post("/", status_code=status.HTTP_201_CREATED)
 def add_book(
         book_data: BookSchema,
         db: Session = Depends(get_db),
@@ -37,7 +37,7 @@ def add_book(
         }
     }
 
-@routers.get("/books", response_model=dict)
+@routers.get("/", response_model=dict)
 def get_books(
         db: Session = Depends(get_db),
         current_user: Users = Depends(get_current_user)
@@ -59,7 +59,7 @@ def get_books(
         ]
     }
 
-@routers.get("/books/{book_id}", response_model=dict)
+@routers.get("/{book_id}", response_model=dict)
 def get_book(
         book_id: int,
         db: Session = Depends(get_db),
@@ -84,7 +84,7 @@ def get_book(
         "publication_year": book.book_year
     }
 
-@routers.put("/books/{book_id}", response_model=dict)
+@routers.put("/{book_id}", response_model=dict)
 def update_book(
         book_id: int,
         book_data: BookSchema,
@@ -123,7 +123,7 @@ def update_book(
     }
 
 
-@routers.delete("/books/{book_id}", response_model=dict)
+@routers.delete("/{book_id}", response_model=dict)
 def delete_book(
         book_id: int,
         db: Session = Depends(get_db),
