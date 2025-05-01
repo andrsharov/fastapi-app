@@ -5,7 +5,7 @@ class BookSchema(BaseModel):
     book_author: str
     book_year: int
 
-    class Config:
+    class ConfigDict:
         json_schema_extra = {
             "example": {
                 "book_title": "Название книги",

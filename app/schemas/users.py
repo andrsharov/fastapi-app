@@ -5,7 +5,7 @@ class UserSchema(BaseModel):
     user_full_name: str
     user_bearer_access_token: str
 
-    class Config:
+    class ConfigDict:
         json_schema_extra = {
             "example": {
                 "user_name": "Имя пользователя (Логин)",

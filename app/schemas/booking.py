@@ -5,16 +5,23 @@ class BookingSchema(BaseModel):
     book_id: int
     user_id: int
 
-    class Config:
+    class ConfigDict:
         json_schema_extra = {
             "example": {
-                "book_id": "ID Книги",
-                "user_id": "ID Пользователя"
+                "book_id": 1,
+                "user_id": 1
             }
         }
 
 class BookingCreate(BookingSchema):
-    pass
+
+    class ConfigDict:
+        json_schema_extra = {
+            "example": {
+                "book_id": 1,
+                "user_id": 1
+            }
+        }
 
 class BookingFinish(BookingSchema):
     pass
@@ -27,7 +34,8 @@ class BookingGetResponse(BookingSchema):
     date_end: datetime | None
     status: int
 
-    class Config:
+    class ConfigDict:
+        from_attributes = True  # Включаем поддержку ORM
         json_schema_extra = {
             "example": {
                 "id": 1,
@@ -43,7 +51,7 @@ class BookingDeleteResponse(BaseModel):
     message: str
     deleted_id: int
 
-    class Config:
+    class ConfigDict:
         json_schema_extra = {
             "example": {
                 "message": "Бронирование успешно удалено",
