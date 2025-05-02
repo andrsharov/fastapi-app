@@ -1,0 +1,5 @@
+pylint --recursive=y -v --ignore=db.sqlite3 app/* > pylint.txt
+Using config file ~/fastapi-app/.pylintrc
+--------------------------------------------------------------------------------------------------------------
+Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
+Checked 11 files, skipped 1 files/modules
