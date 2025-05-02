@@ -1,11 +1,14 @@
-from pydantic import BaseModel
+"""pydantic schemas for /booking"""
 from datetime import datetime
+from pydantic import BaseModel
 
-class BookingSchema(BaseModel):
+class BookingSchema(BaseModel):  # pylint: disable=too-few-public-methods
+    """BookingSchema Model"""
     book_id: int
     user_id: int
 
-    class ConfigDict:
+    class ConfigDict:  # pylint: disable=too-few-public-methods
+        """Configuration Model"""
         json_schema_extra = {
             "example": {
                 "book_id": 1,
@@ -14,8 +17,10 @@ class BookingSchema(BaseModel):
         }
 
 class BookingCreate(BookingSchema):
+    """BookingCreate Model"""# pylint: disable=too-few-public-methods
 
-    class ConfigDict:
+    class ConfigDict:  # pylint: disable=too-few-public-methods
+        """Configuration Model"""
         json_schema_extra = {
             "example": {
                 "book_id": 1,
@@ -23,10 +28,11 @@ class BookingCreate(BookingSchema):
             }
         }
 
-class BookingFinish(BookingSchema):
-    pass
+class BookingFinish(BookingSchema):  # pylint: disable=too-few-public-methods
+    """BookingFinish Model"""
 
-class BookingGetResponse(BookingSchema):
+class BookingGetResponse(BookingSchema):  # pylint: disable=too-few-public-methods
+    """BookingGetResponse Model"""
     id: int
     book_id: int
     user_id: int
@@ -34,7 +40,8 @@ class BookingGetResponse(BookingSchema):
     date_end: datetime | None
     status: int
 
-    class ConfigDict:
+    class ConfigDict:  # pylint: disable=too-few-public-methods
+        """Configuration Model"""
         from_attributes = True  # Включаем поддержку ORM
         json_schema_extra = {
             "example": {
@@ -47,11 +54,13 @@ class BookingGetResponse(BookingSchema):
             }
         }
 
-class BookingDeleteResponse(BaseModel):
+class BookingDeleteResponse(BaseModel):  # pylint: disable=too-few-public-methods
+    """BookingDeleteResponse Model"""
     message: str
     deleted_id: int
 
-    class ConfigDict:
+    class ConfigDict:  # pylint: disable=too-few-public-methods
+        """Configuration Model"""
         json_schema_extra = {
             "example": {
                 "message": "Бронирование успешно удалено",
