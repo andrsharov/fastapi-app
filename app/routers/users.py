@@ -1,3 +1,4 @@
+"""Routes for /users path"""
 from fastapi import status, APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.database import get_db, Users
