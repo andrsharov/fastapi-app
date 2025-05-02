@@ -1,3 +1,4 @@
+"""Routes for /books path"""
 from fastapi import HTTPException, status, APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.database import get_db, Books, Users
@@ -11,7 +12,7 @@ def add_book(
         book_data: BookSchema,
         db: Session = Depends(get_db),
         current_user: Users = Depends(get_current_user)
-):
+): # pylint: disable=unused-argument
     """
     Добавить новую книгу в базу данных
     """
@@ -41,7 +42,7 @@ def add_book(
 def get_books(
         db: Session = Depends(get_db),
         current_user: Users = Depends(get_current_user)
-):
+):  # pylint: disable=unused-argument
     """
     Получаем список всех книг из базы данных
     """
@@ -64,7 +65,7 @@ def get_book(
         book_id: int,
         db: Session = Depends(get_db),
         current_user: Users = Depends(get_current_user)
-):
+):  # pylint: disable=unused-argument
     """
     Получить книгу по ID из базы данных
     """
@@ -90,7 +91,7 @@ def update_book(
         book_data: BookSchema,
         db: Session = Depends(get_db),
         current_user: Users = Depends(get_current_user)
-):
+):  # pylint: disable=unused-argument
     """
     Обновить данные книги по ID
     """
@@ -128,7 +129,7 @@ def delete_book(
         book_id: int,
         db: Session = Depends(get_db),
         current_user: Users = Depends(get_current_user)
-):
+):  # pylint: disable=unused-argument
     """
     Удалить книгу по ID из базы данных
     """
