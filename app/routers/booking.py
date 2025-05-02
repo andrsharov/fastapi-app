@@ -1,8 +1,10 @@
+"""Routes for /booking path"""
+from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from datetime import datetime, timezone
 from app.database import get_db, Booking, Books, Users
-from app.schemas.booking import BookingCreate, BookingFinish, BookingGetResponse, BookingDeleteResponse
+from app.schemas.booking import BookingCreate, BookingFinish
+from app.schemas.booking import BookingGetResponse, BookingDeleteResponse
 from app.auth.auth_handler import get_current_user
 
 routers = APIRouter(prefix="/booking", tags=["Бронирование"])
@@ -14,6 +16,7 @@ def issue_book(
         db: Session = Depends(get_db),
         current_user: Users = Depends(get_current_user)
 ):
+    """Выдать книгу"""
     # Проверка существования книги
     book = db.query(Books).filter(Books.book_id == booking_data.book_id).first()
     if not book:
@@ -54,6 +57,7 @@ def return_book(
         db: Session = Depends(get_db),
         current_user: Users = Depends(get_current_user)
 ):
+    """Сдать книгу в библиотеку"""
     booking = db.query(Booking).filter(
         Booking.id == booking_id,
         Booking.user_id == current_user.user_id
